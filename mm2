@@ -1,123 +1,460 @@
 --[[
-    MM2 ULTIMATE PROTECTED
-    Защита: MoonSec + Anti-Steal + HWID + Anti-Debug
+    MM2 FINAL | Key: 1337 + Movement
 ]]
 
--- ===== СЛОЙ 1: ПРОВЕРКА НА ЭКЗЕКУТОР =====
-local function checkExecutor()
-    local allowed = false
-    local executors = {"Xeno", "Synapse", "ScriptWare", "Krnl", "Electron"}
-    
-    -- Проверяем через identifyexecutor если есть
-    local success, executorName = pcall(identifyexecutor)
-    if success then
-        for _, exe in ipairs(executors) do
-            if executorName:find(exe) then
-                allowed = true
-                break
-            end
-        end
-    end
-    
-    -- Альтернативная проверка
-    if not allowed then
-        -- Проверка на наличие функций характерных для экзекуторов
-        if hookfunction or hookmetamethod or getcallingscript then
-            allowed = true
-        end
-    end
-    
-    return allowed
-end
+-- ===== KEY SYSTEM =====
+local keyGui = Instance.new("ScreenGui")
+local keyFrame = Instance.new("Frame")
+local keyBox = Instance.new("TextBox")
+local keyButton = Instance.new("TextButton")
+local keyTitle = Instance.new("TextLabel")
 
--- ===== СЛОЙ 2: АНТИ-ДЕБАГГЕР =====
-local function antiDebug()
-    -- Убиваем дебаг функции
-    if debug then
-        for i, v in pairs(debug) do
-            debug[i] = nil
-        end
-    end
-    
-    -- Проверка времени выполнения (против декомпиляторов)
-    local startTime = os.clock()
-    local dummy = ""
-    for i = 1, 10000 do
-        dummy = dummy .. tostring(math.random())
-    end
-    local execTime = os.clock() - startTime
-    
-    -- Если выполнилось слишком быстро - это декомпилятор
-    if execTime < 0.1 then
-        while true do end
-    end
-end
+keyGui.Name = "KeyGui"
+keyGui.Parent = game.CoreGui
 
--- ===== СЛОЙ 3: HWID ПРОВЕРКА (ОПЦИОНАЛЬНО) =====
-local function checkHWID()
-    -- Сюда впиши свой HWID если хочешь
-    local allowedHWIDs = {
-        ["ваш_hwid_1"] = true,
-        ["ваш_hwid_2"] = true,
-    }
-    
-    local myHWID = game:GetService("RbxAnalyticsService"):GetClientId()
-    return allowedHWIDs[myHWID] or true -- true = отключено
-end
+keyFrame.Name = "KeyFrame"
+keyFrame.Parent = keyGui
+keyFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+keyFrame.BorderSizePixel = 0
+keyFrame.Position = UDim2.new(0.5, -125, 0.5, -60)
+keyFrame.Size = UDim2.new(0, 250, 0, 120)
+keyFrame.Active = true
 
--- ===== СЛОЙ 4: ЗАЩИТА ОТ КОПИРОВАНИЯ ПАМЯТИ =====
-local function memoryProtection()
-    local protected = {}
-    
-    -- Прячем важные функции
-    local oldLoadstring = loadstring
-    loadstring = function(...)
-        if not checkExecutor() then
-            return error("Access denied")
-        end
-        return oldLoadstring(...)
-    end
-    
-    -- Защищаем глобальные переменные
-    getgenv().PROTECTED_MAIN = true
-end
+keyTitle.Name = "KeyTitle"
+keyTitle.Parent = keyFrame
+keyTitle.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+keyTitle.BorderSizePixel = 0
+keyTitle.Size = UDim2.new(1, 0, 0, 30)
+keyTitle.Font = Enum.Font.GothamBold
+keyTitle.Text = "ВВЕДИ КЛЮЧ"
+keyTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyTitle.TextSize = 16
 
--- ===== СЛОЙ 5: ОСНОВНОЙ КОД С ОБФУСКАЦИЕЙ =====
-local function mainScript()
-    -- ТВОЙ ОСНОВНОЙ КОД (КОТОРЫЙ БЫЛ РАНЬШЕ)
-    -- ВСТАВЛЯЕМ СЮДА ТОТ САМЫЙ ОБФУСЦИРОВАННЫЙ КОД
-    -- КОТОРЫЙ ТЫ МНЕ СКИНУЛ
-end
+keyBox.Name = "KeyBox"
+keyBox.Parent = keyFrame
+keyBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+keyBox.BorderSizePixel = 0
+keyBox.Position = UDim2.new(0, 10, 0, 40)
+keyBox.Size = UDim2.new(1, -20, 0, 30)
+keyBox.Font = Enum.Font.Gotham
+keyBox.PlaceholderText = "ключ"
+keyBox.Text = ""
+keyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyBox.TextSize = 14
 
--- ===== ЗАПУСК С ЗАЩИТОЙ =====
-pcall(function()
-    -- Проверка 1: Экзекутор
-    if not checkExecutor() then
-        return -- Выходим если не тот софт
+keyButton.Name = "KeyButton"
+keyButton.Parent = keyFrame
+keyButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+keyButton.BorderSizePixel = 0
+keyButton.Position = UDim2.new(0.5, -60, 0, 80)
+keyButton.Size = UDim2.new(0, 120, 0, 30)
+keyButton.Font = Enum.Font.GothamBold
+keyButton.Text = "ВОЙТИ"
+keyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyButton.TextSize = 14
+
+keyButton.MouseButton1Click:Connect(function()
+    if keyBox.Text == "1337" then
+        keyGui:Destroy()
+        LoadMain()
+    else
+        keyBox.Text = ""
+        keyBox.PlaceholderText = "неверный ключ"
     end
-    
-    -- Проверка 2: Анти-дебаг
-    antiDebug()
-    
-    -- Проверка 3: HWID
-    if not checkHWID() then
-        return
-    end
-    
-    -- Проверка 4: Память
-    memoryProtection()
-    
-    -- Запускаем основной код
-    mainScript()
 end)
 
--- ===== СЛОЙ 6: МИНА ДЛЯ ВОРОВ =====
--- Если кто-то пытается прочитать код через getfenv
-local oldGetfenv = getfenv
-getfenv = function(...)
-    local result = oldGetfenv(...)
-    if result and result.PROTECTED_MAIN then
-        return {} -- Возвращаем пустоту
+-- ===== MAIN SCRIPT =====
+function LoadMain()
+    local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+    local UserInputService = game:GetService("UserInputService")
+    local LocalPlayer = Players.LocalPlayer
+    local Camera = workspace.CurrentCamera
+
+    -- ===== НАСТРОЙКИ =====
+    local settings = {
+        -- ESP
+        espEnabled = true,
+        glowTransparency = 0.5,
+        murdererColor = Color3.fromRGB(255, 0, 0),
+        sheriffColor = Color3.fromRGB(0, 255, 0),
+        innocentColor = Color3.fromRGB(255, 255, 255),
+        
+        -- Aimbot
+        aimbotEnabled = false,
+        aimbotKey = Enum.UserInputType.MouseButton2,
+        aimbotKeyName = "ПКМ",
+        aimbotSmoothness = 0.5,
+        aimbotFov = 90,
+        aimbotFovEnabled = true,
+        aimbotTargetPart = "Head",
+        fovColor = Color3.fromRGB(255, 255, 255),
+        
+        -- Movement
+        speedEnabled = false,
+        speedValue = 32,
+        jumpEnabled = false,
+        jumpValue = 75,
+        noclipEnabled = false
+    }
+
+    local highlights = {}
+    local fovCircle = Drawing.new("Circle")
+    fovCircle.Visible = false
+    fovCircle.Thickness = 2
+    fovCircle.NumSides = 60
+    fovCircle.Radius = settings.aimbotFov
+    fovCircle.Color = settings.fovColor
+
+    -- ===== WINDOW =====
+    local Window = Rayfield:CreateWindow({
+        Name = "MM2 FINAL | 1337",
+        LoadingTitle = "ключ принят",
+        LoadingSubtitle = "добро пожаловать",
+        ConfigurationSaving = { Enabled = true, FolderName = "MM2Final", FileName = "Config" },
+        KeySystem = false
+    })
+
+    -- ===== ESP TAB =====
+    local EspTab = Window:CreateTab("ESP", 4483362458)
+
+    EspTab:CreateToggle({
+        Name = "включить",
+        CurrentValue = true,
+        Flag = "EspMain",
+        Callback = function(v)
+            settings.espEnabled = v
+            for _, h in pairs(highlights) do
+                if h then h.Enabled = v end
+            end
+        end
+    })
+
+    EspTab:CreateSlider({
+        Name = "прозрачность",
+        Range = {0, 1},
+        Increment = 0.1,
+        CurrentValue = 0.5,
+        Flag = "EspTrans",
+        Callback = function(v)
+            settings.glowTransparency = v
+            for _, h in pairs(highlights) do
+                if h then h.FillTransparency = v end
+            end
+        end
+    })
+
+    EspTab:CreateLabel("цвета")
+
+    EspTab:CreateColorPicker({
+        Name = "убийца",
+        Color = Color3.fromRGB(255, 0, 0),
+        Flag = "ColorMurderer",
+        Callback = function(v) settings.murdererColor = v end
+    })
+
+    EspTab:CreateColorPicker({
+        Name = "шериф",
+        Color = Color3.fromRGB(0, 255, 0),
+        Flag = "ColorSheriff",
+        Callback = function(v) settings.sheriffColor = v end
+    })
+
+    EspTab:CreateColorPicker({
+        Name = "мирный",
+        Color = Color3.fromRGB(255, 255, 255),
+        Flag = "ColorInnocent",
+        Callback = function(v) settings.innocentColor = v end
+    })
+
+    -- ===== AIMBOT TAB =====
+    local AimbotTab = Window:CreateTab("AIMBOT", 4483362458)
+
+    AimbotTab:CreateToggle({
+        Name = "включить",
+        CurrentValue = false,
+        Flag = "AimbotMain",
+        Callback = function(v) settings.aimbotEnabled = v end
+    })
+
+    AimbotTab:CreateDropdown({
+        Name = "клавиша",
+        Options = {"ПКМ", "ЛКМ", "E", "Q", "Shift", "Ctrl", "X"},
+        CurrentOption = "ПКМ",
+        Flag = "AimbotKey",
+        Callback = function(option)
+            settings.aimbotKeyName = option
+            local keys = {
+                ["ПКМ"] = Enum.UserInputType.MouseButton2,
+                ["ЛКМ"] = Enum.UserInputType.MouseButton1,
+                ["E"] = Enum.KeyCode.E,
+                ["Q"] = Enum.KeyCode.Q,
+                ["Shift"] = Enum.KeyCode.LeftShift,
+                ["Ctrl"] = Enum.KeyCode.LeftControl,
+                ["X"] = Enum.KeyCode.X
+            }
+            settings.aimbotKey = keys[option]
+        end
+    })
+
+    AimbotTab:CreateSlider({
+        Name = "fov",
+        Range = {0, 360},
+        Increment = 5,
+        CurrentValue = 90,
+        Flag = "AimbotFov",
+        Callback = function(v)
+            settings.aimbotFov = v
+            fovCircle.Radius = v
+        end
+    })
+
+    AimbotTab:CreateToggle({
+        Name = "показать fov",
+        CurrentValue = true,
+        Flag = "FovCircle",
+        Callback = function(v)
+            settings.aimbotFovEnabled = v
+            fovCircle.Visible = v and settings.aimbotEnabled
+        end
+    })
+
+    AimbotTab:CreateColorPicker({
+        Name = "цвет fov",
+        Color = Color3.fromRGB(255, 255, 255),
+        Flag = "FovColor",
+        Callback = function(v)
+            settings.fovColor = v
+            fovCircle.Color = v
+        end
+    })
+
+    AimbotTab:CreateSlider({
+        Name = "плавность",
+        Range = {0, 1},
+        Increment = 0.1,
+        CurrentValue = 0.5,
+        Flag = "AimbotSmooth",
+        Callback = function(v) settings.aimbotSmoothness = v end
+    })
+
+    AimbotTab:CreateDropdown({
+        Name = "часть",
+        Options = {"Head", "Torso", "HumanoidRootPart"},
+        CurrentOption = "Head",
+        Flag = "AimbotPart",
+        Callback = function(v) settings.aimbotTargetPart = v end
+    })
+
+    -- ===== MOVEMENT TAB =====
+    local MoveTab = Window:CreateTab("MOVEMENT", 6031068329)
+
+    MoveTab:CreateToggle({
+        Name = "speed boost",
+        CurrentValue = false,
+        Flag = "SpeedToggle",
+        Callback = function(v)
+            settings.speedEnabled = v
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                LocalPlayer.Character.Humanoid.WalkSpeed = v and settings.speedValue or 16
+            end
+        end
+    })
+
+    MoveTab:CreateSlider({
+        Name = "скорость",
+        Range = {16, 200},
+        Increment = 5,
+        CurrentValue = 32,
+        Flag = "SpeedValue",
+        Callback = function(v)
+            settings.speedValue = v
+            if settings.speedEnabled and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                LocalPlayer.Character.Humanoid.WalkSpeed = v
+            end
+        end
+    })
+
+    MoveTab:CreateToggle({
+        Name = "jump power",
+        CurrentValue = false,
+        Flag = "JumpToggle",
+        Callback = function(v)
+            settings.jumpEnabled = v
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                LocalPlayer.Character.Humanoid.JumpPower = v and settings.jumpValue or 50
+            end
+        end
+    })
+
+    MoveTab:CreateSlider({
+        Name = "высота прыжка",
+        Range = {50, 200},
+        Increment = 5,
+        CurrentValue = 75,
+        Flag = "JumpValue",
+        Callback = function(v)
+            settings.jumpValue = v
+            if settings.jumpEnabled and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                LocalPlayer.Character.Humanoid.JumpPower = v
+            end
+        end
+    })
+
+    MoveTab:CreateToggle({
+        Name = "noclip",
+        CurrentValue = false,
+        Flag = "NoClip",
+        Callback = function(v) settings.noclipEnabled = v end
+    })
+
+    -- ===== FUNCTIONS =====
+    function getRole(player)
+        if not player.Character then return "Innocent" end
+        for _, tool in ipairs(player.Character:GetChildren()) do
+            if tool:IsA("Tool") then
+                if tool.Name:lower():find("knife") then return "Murderer"
+                elseif tool.Name:lower():find("gun") or tool.Name == "Gun" then return "Sheriff" end
+            end
+        end
+        return "Innocent"
     end
-    return result
+
+    function getGlowColor(player)
+        local role = getRole(player)
+        if role == "Murderer" then return settings.murdererColor
+        elseif role == "Sheriff" then return settings.sheriffColor
+        else return settings.innocentColor end
+    end
+
+    function createHighlight(player)
+        if player == LocalPlayer then return end
+        if not player.Character then return end
+        
+        if highlights[player] then
+            pcall(function() highlights[player]:Destroy() end)
+        end
+        
+        local highlight = Instance.new("Highlight")
+        highlight.Adornee = player.Character
+        highlight.FillColor = getGlowColor(player)
+        highlight.FillTransparency = settings.glowTransparency
+        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+        highlight.Enabled = settings.espEnabled
+        highlight.Parent = player.Character
+        
+        highlights[player] = highlight
+    end
+
+    function getClosestTarget()
+        local closest = nil
+        local shortestDist = settings.aimbotFov
+        local mousePos = UserInputService:GetMouseLocation()
+        
+        for _, player in ipairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild(settings.aimbotTargetPart) then
+                local part = player.Character[settings.aimbotTargetPart]
+                local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
+                
+                if onScreen then
+                    local dist = (Vector2.new(screenPos.X, screenPos.Y) - mousePos).Magnitude
+                    if dist < shortestDist then
+                        shortestDist = dist
+                        closest = player
+                    end
+                end
+            end
+        end
+        
+        return closest
+    end
+
+    -- ===== ESP SETUP =====
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            task.spawn(function()
+                if player.Character then createHighlight(player) end
+                player.CharacterAdded:Connect(function()
+                    task.wait(0.5)
+                    createHighlight(player)
+                end)
+            end)
+        end
+    end
+
+    Players.PlayerAdded:Connect(function(player)
+        if player ~= LocalPlayer then
+            player.CharacterAdded:Connect(function()
+                task.wait(0.5)
+                createHighlight(player)
+            end)
+        end
+    end)
+
+    Players.PlayerRemoving:Connect(function(player)
+        if highlights[player] then
+            pcall(function() highlights[player]:Destroy() end)
+            highlights[player] = nil
+        end
+    end)
+
+    -- Update colors
+    task.spawn(function()
+        while task.wait(1) do
+            for player, highlight in pairs(highlights) do
+                if player and player.Character and highlight then
+                    pcall(function()
+                        highlight.FillColor = getGlowColor(player)
+                    end)
+                end
+            end
+        end
+    end)
+
+    -- ===== MAIN LOOP =====
+    RunService.RenderStepped:Connect(function()
+        -- FOV circle
+        fovCircle.Position = UserInputService:GetMouseLocation()
+        fovCircle.Visible = settings.aimbotFovEnabled and settings.aimbotEnabled
+        
+        -- Aimbot
+        if settings.aimbotEnabled then
+            local keyPressed = false
+            if typeof(settings.aimbotKey) == "EnumItem" then
+                if settings.aimbotKey.Name:find("MouseButton") then
+                    keyPressed = UserInputService:IsMouseButtonPressed(settings.aimbotKey)
+                else
+                    keyPressed = UserInputService:IsKeyDown(settings.aimbotKey)
+                end
+            end
+            
+            if keyPressed then
+                local target = getClosestTarget()
+                if target and target.Character and target.Character:FindFirstChild(settings.aimbotTargetPart) then
+                    local part = target.Character[settings.aimbotTargetPart]
+                    Camera.CFrame = Camera.CFrame:Lerp(
+                        CFrame.new(Camera.CFrame.Position, part.Position),
+                        settings.aimbotSmoothness
+                    )
+                end
+            end
+        end
+        
+        -- NoClip
+        if settings.noclipEnabled and LocalPlayer.Character then
+            for _, v in pairs(LocalPlayer.Character:GetDescendants()) do
+                if v:IsA("BasePart") then
+                    v.CanCollide = false
+                end
+            end
+        end
+    end)
+
+    Rayfield:Notify({
+        Title = "1337",
+        Content = "скрипт загружен",
+        Duration = 2
+    })
 end
