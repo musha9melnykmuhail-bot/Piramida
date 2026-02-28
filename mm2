@@ -1,69 +1,141 @@
---[[
-    MM2 FINAL | Key: 1337 + Movement
-]]
+-- ===== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ =====
+local LoadMain
+local RayfieldWindow
+local keyGuiInstance
 
--- ===== KEY SYSTEM =====
+-- ===== MODERN KEY SYSTEM (2024 Design) =====
 local keyGui = Instance.new("ScreenGui")
-local keyFrame = Instance.new("Frame")
-local keyBox = Instance.new("TextBox")
-local keyButton = Instance.new("TextButton")
-local keyTitle = Instance.new("TextLabel")
-
-keyGui.Name = "KeyGui"
+keyGui.Name = "ModernKeyGui"
 keyGui.Parent = game.CoreGui
+keyGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+keyGuiInstance = keyGui
 
-keyFrame.Name = "KeyFrame"
-keyFrame.Parent = keyGui
-keyFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-keyFrame.BorderSizePixel = 0
-keyFrame.Position = UDim2.new(0.5, -125, 0.5, -60)
-keyFrame.Size = UDim2.new(0, 250, 0, 120)
-keyFrame.Active = true
+-- Фон с размытием эффектом
+local keyBackground = Instance.new("Frame")
+keyBackground.Name = "Background"
+keyBackground.Parent = keyGui
+keyBackground.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+keyBackground.BackgroundTransparency = 0.4
+keyBackground.Size = UDim2.new(1, 0, 1, 0)
+keyBackground.BorderSizePixel = 0
 
-keyTitle.Name = "KeyTitle"
-keyTitle.Parent = keyFrame
-keyTitle.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-keyTitle.BorderSizePixel = 0
-keyTitle.Size = UDim2.new(1, 0, 0, 30)
-keyTitle.Font = Enum.Font.GothamBold
-keyTitle.Text = "ВВЕДИ КЛЮЧ"
-keyTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-keyTitle.TextSize = 16
+-- Главный контейнер
+local keyContainer = Instance.new("Frame")
+keyContainer.Name = "Container"
+keyContainer.Parent = keyGui
+keyContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+keyContainer.BorderSizePixel = 0
+keyContainer.Position = UDim2.new(0.5, -200, 0.5, -120)
+keyContainer.Size = UDim2.new(0, 400, 0, 240)
 
+-- Скругление углов
+local cornerRadius = Instance.new("UICorner")
+cornerRadius.CornerRadius = UDim.new(0, 12)
+cornerRadius.Parent = keyContainer
+
+-- Заголовок с градиентом
+local keyHeader = Instance.new("Frame")
+keyHeader.Name = "Header"
+keyHeader.Parent = keyContainer
+keyHeader.BackgroundColor3 = Color3.fromRGB(45, 85, 255)
+keyHeader.BorderSizePixel = 0
+keyHeader.Size = UDim2.new(1, 0, 0, 60)
+
+local headerCorner = Instance.new("UICorner")
+headerCorner.CornerRadius = UDim.new(0, 12)
+headerCorner.Parent = keyHeader
+
+-- Логотип/Название
+local keyLogo = Instance.new("TextLabel")
+keyLogo.Name = "Logo"
+keyLogo.Parent = keyHeader
+keyLogo.BackgroundTransparency = 1
+keyLogo.Size = UDim2.new(1, 0, 1, 0)
+keyLogo.Font = Enum.Font.GothamBold
+keyLogo.Text = "MM2 ULTIMATE"
+keyLogo.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyLogo.TextSize = 24
+
+-- Иконка замка
+local lockIcon = Instance.new("TextLabel")
+lockIcon.Name = "LockIcon"
+lockIcon.Parent = keyHeader
+lockIcon.BackgroundTransparency = 1
+lockIcon.Size = UDim2.new(0, 50, 1, 0)
+lockIcon.Position = UDim2.new(1, -50, 0, 0)
+lockIcon.Font = Enum.Font.GothamBold
+lockIcon.Text = "🔐"
+lockIcon.TextSize = 28
+
+-- Содержимое
+local keyContent = Instance.new("Frame")
+keyContent.Name = "Content"
+keyContent.Parent = keyContainer
+keyContent.BackgroundTransparency = 1
+keyContent.Position = UDim2.new(0, 0, 0, 60)
+keyContent.Size = UDim2.new(1, 0, 1, -60)
+
+-- Текст инструкции
+local keyLabel = Instance.new("TextLabel")
+keyLabel.Name = "Label"
+keyLabel.Parent = keyContent
+keyLabel.BackgroundTransparency = 1
+keyLabel.Position = UDim2.new(0, 20, 0, 15)
+keyLabel.Size = UDim2.new(1, -40, 0, 25)
+keyLabel.Font = Enum.Font.Gotham
+keyLabel.Text = "Enter your access key"
+keyLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+keyLabel.TextSize = 14
+keyLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Поле ввода (TextBox)
+local keyBox = Instance.new("TextBox")
 keyBox.Name = "KeyBox"
-keyBox.Parent = keyFrame
-keyBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+keyBox.Parent = keyContent
+keyBox.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
 keyBox.BorderSizePixel = 0
-keyBox.Position = UDim2.new(0, 10, 0, 40)
-keyBox.Size = UDim2.new(1, -20, 0, 30)
+keyBox.Position = UDim2.new(0, 20, 0, 50)
+keyBox.Size = UDim2.new(1, -40, 0, 45)
 keyBox.Font = Enum.Font.Gotham
-keyBox.PlaceholderText = "ключ"
+keyBox.PlaceholderText = "2026-3"
+keyBox.PlaceholderColor3 = Color3.fromRGB(100, 100, 120)
 keyBox.Text = ""
 keyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-keyBox.TextSize = 14
+keyBox.TextSize = 16
+keyBox.ClearTextOnFocus = false
 
-keyButton.Name = "KeyButton"
-keyButton.Parent = keyFrame
-keyButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+-- Скругление углов для TextBox
+local boxCorner = Instance.new("UICorner")
+boxCorner.CornerRadius = UDim.new(0, 8)
+boxCorner.Parent = keyBox
+
+-- Кнопка ENTER
+local keyButton = Instance.new("TextButton")
+keyButton.Name = "EnterButton"
+keyButton.Parent = keyContent
+keyButton.BackgroundColor3 = Color3.fromRGB(45, 85, 255)
 keyButton.BorderSizePixel = 0
-keyButton.Position = UDim2.new(0.5, -60, 0, 80)
-keyButton.Size = UDim2.new(0, 120, 0, 30)
+keyButton.Position = UDim2.new(0, 20, 0, 110)
+keyButton.Size = UDim2.new(1, -40, 0, 45)
 keyButton.Font = Enum.Font.GothamBold
-keyButton.Text = "ВОЙТИ"
+keyButton.Text = "ENTER"
 keyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-keyButton.TextSize = 14
+keyButton.TextSize = 16
 
-keyButton.MouseButton1Click:Connect(function()
-    if keyBox.Text == "1337" then
-        keyGui:Destroy()
-        LoadMain()
-    else
-        keyBox.Text = ""
-        keyBox.PlaceholderText = "неверный ключ"
-    end
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 8)
+buttonCorner.Parent = keyButton
+
+-- Эффект наведения на кнопку
+keyButton.MouseEnter:Connect(function()
+    keyButton.BackgroundColor3 = Color3.fromRGB(65, 105, 255)
 end)
 
--- ===== MAIN SCRIPT =====
+keyButton.MouseLeave:Connect(function()
+    keyButton.BackgroundColor3 = Color3.fromRGB(45, 85, 255)
+end)
+
+-- ===== MAIN SCRIPT DEFINITION =====
 function LoadMain()
     local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
@@ -72,15 +144,122 @@ function LoadMain()
     local UserInputService = game:GetService("UserInputService")
     local LocalPlayer = Players.LocalPlayer
     local Camera = workspace.CurrentCamera
+    local VirtualUser = game:GetService("VirtualUser")
+    
+    -- ===== LANGUAGE SETUP =====
+    local language = "EN"
+    
+    local texts = {
+        ["EN"] = {
+            windowName = "MM2 ULTIMATE",
+            loadingTitle = "key accepted",
+            loadingSubtitle = "welcome",
+            visualsTab = "VISUALS 👁️",
+            aimbotTab = "AIMBOT 🎯",
+            moveTab = "MOVEMENT 💨",
+            farmTab = "FARM 💰",
+            settingsTab = "SETTINGS ⚙️",
+            toggle = "toggle",
+            transparency = "transparency",
+            colors = "colors",
+            murderer = "murderer",
+            sheriff = "sheriff",
+            innocent = "innocent",
+            hero = "hero",
+            key = "key",
+            fov = "fov",
+            showFov = "show fov",
+            fovColor = "fov color",
+            smooth = "smoothness",
+            targetPart = "target part",
+            speedBoost = "speed boost",
+            speed = "speed",
+            jumpPower = "jump power",
+            jumpHeight = "jump height",
+            noclip = "noclip",
+            autoFarm = "auto farm coins",
+            farmRadius = "farm radius",
+            farmSpeed = "farm speed (sec)",
+            heroEsp = "hero esp",
+            teamCheck = "team check",
+            language = "language",
+            loaded = "script loaded",
+            wallCheck = "wall check (anti-obvious)",
+            predictive = "predictive aimbot",
+            distanceDisplay = "distance display 📏",
+            roleIndicator = "role indicator 🎭",
+            wallClimb = "wall climb 🧗",
+            sprintMode = "sprint mode 🏃",
+            wallClimbSpeed = "wall climb speed",
+            sprintMultiplier = "sprint multiplier",
+            theme = "theme 🎨",
+            toggleMenu = "toggle menu (Delete)",
+            menuHidden = "menu hidden"
+        },
+        ["UA"] = {
+            windowName = "MM2 УЛЬТИМЕЙТ",
+            loadingTitle = "ключ прийнято",
+            loadingSubtitle = "ласкаво просимо",
+            visualsTab = "ВІЗУАЛІЗАЦІЯ 👁️",
+            aimbotTab = "АІМБОТ 🎯",
+            moveTab = "МУВМЕНТ 💨",
+            farmTab = "ФАРМ 💰",
+            settingsTab = "НАЛАШТУВАННЯ ⚙️",
+            toggle = "ввімкнути",
+            transparency = "прозорість",
+            colors = "кольори",
+            murderer = "вбивця",
+            sheriff = "шериф",
+            innocent = "мирний",
+            hero = "герой",
+            key = "клавіша",
+            fov = "FOV",
+            showFov = "показати FOV",
+            fovColor = "колір FOV",
+            smooth = "плавність",
+            targetPart = "частина тіла",
+            speedBoost = "прискорення",
+            speed = "швидкість",
+            jumpPower = "сила стрибка",
+            jumpHeight = "висота стрибка",
+            noclip = "нокліп",
+            autoFarm = "авто збір монет",
+            farmRadius = "радіус збору",
+            farmSpeed = "швидкість (сек)",
+            heroEsp = "ESP героя",
+            teamCheck = "перевірка команди",
+            language = "мова",
+            loaded = "скрипт завантажено",
+            wallCheck = "перевірка стін",
+            predictive = "предиктивний аймбот",
+            distanceDisplay = "відображення дистанції 📏",
+            roleIndicator = "індикатор ролі 🎭",
+            wallClimb = "лазання по стінам 🧗",
+            sprintMode = "режим спринту 🏃",
+            wallClimbSpeed = "швидкість лазання",
+            sprintMultiplier = "множник спринту",
+            theme = "тема 🎨",
+            toggleMenu = "перемкнути меню (Delete)",
+            menuHidden = "меню приховано"
+        }
+    }
+    
+    local T = texts[language]
 
     -- ===== НАСТРОЙКИ =====
     local settings = {
-        -- ESP
+        -- Visuals (ESP)
         espEnabled = true,
         glowTransparency = 0.5,
         murdererColor = Color3.fromRGB(255, 0, 0),
         sheriffColor = Color3.fromRGB(0, 255, 0),
         innocentColor = Color3.fromRGB(255, 255, 255),
+        heroColor = Color3.fromRGB(255, 255, 0),
+        teamCheck = false,
+        heroEsp = true,
+        wallCheck = true,
+        distanceDisplayEnabled = false,
+        roleIndicatorEnabled = false,
         
         -- Aimbot
         aimbotEnabled = false,
@@ -91,37 +270,109 @@ function LoadMain()
         aimbotFovEnabled = true,
         aimbotTargetPart = "Head",
         fovColor = Color3.fromRGB(255, 255, 255),
+        predictiveAimbot = false,
         
         -- Movement
         speedEnabled = false,
         speedValue = 32,
         jumpEnabled = false,
         jumpValue = 75,
-        noclipEnabled = false
+        noclipEnabled = false,
+        wallClimbEnabled = false,
+        wallClimbSpeed = 50,
+        sprintEnabled = false,
+        sprintMultiplier = 1.5,
+        
+        -- Farm
+        farmEnabled = false,
+        farmRadius = 50,
+        farmSpeed = 1,
+        
+        -- UI
+        language = "EN",
+        currentTheme = "Dark",
+        menuVisible = true
+    }
+
+    -- ===== THEME SYSTEM =====
+    local themes = {
+        ["Dark"] = {
+            Primary = Color3.fromRGB(25, 25, 35),
+            Secondary = Color3.fromRGB(35, 35, 45),
+            Accent = Color3.fromRGB(45, 85, 255),
+            Text = Color3.fromRGB(255, 255, 255),
+            SubText = Color3.fromRGB(200, 200, 200)
+        },
+        ["Light"] = {
+            Primary = Color3.fromRGB(245, 245, 250),
+            Secondary = Color3.fromRGB(235, 235, 240),
+            Accent = Color3.fromRGB(100, 150, 255),
+            Text = Color3.fromRGB(30, 30, 40),
+            SubText = Color3.fromRGB(100, 100, 120)
+        },
+        ["Neon"] = {
+            Primary = Color3.fromRGB(15, 15, 25),
+            Secondary = Color3.fromRGB(25, 25, 40),
+            Accent = Color3.fromRGB(0, 255, 200),
+            Text = Color3.fromRGB(0, 255, 200),
+            SubText = Color3.fromRGB(100, 200, 180)
+        }
     }
 
     local highlights = {}
+    local distanceLabels = {}
+    local roleIndicators = {}
     local fovCircle = Drawing.new("Circle")
     fovCircle.Visible = false
     fovCircle.Thickness = 2
     fovCircle.NumSides = 60
     fovCircle.Radius = settings.aimbotFov
     fovCircle.Color = settings.fovColor
+    
+    -- ===== ОПТИМИЗ��ЦИЯ НОКЛІПА =====
+    local noclipParts = {}
+    local noclipEnabled = false
+    local sprintCooldown = 0
+    local sprintActive = false
+    
+    -- ✅ ИСПРАВЛЕНО: Проверка на nil перед обращением
+    local function setupCharacter(character)
+        if character then
+            noclipParts = character:GetDescendants()
+            if noclipEnabled then
+                for _, part in ipairs(noclipParts) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end
+    end
+    
+    if LocalPlayer.Character then
+        setupCharacter(LocalPlayer.Character)
+    end
+    
+    LocalPlayer.CharacterAdded:Connect(function(character)
+        setupCharacter(character)
+    end)
 
     -- ===== WINDOW =====
     local Window = Rayfield:CreateWindow({
-        Name = "MM2 FINAL | 1337",
-        LoadingTitle = "ключ принят",
-        LoadingSubtitle = "добро пожаловать",
+        Name = T.windowName .. " | 1337",
+        LoadingTitle = T.loadingTitle,
+        LoadingSubtitle = T.loadingSubtitle,
         ConfigurationSaving = { Enabled = true, FolderName = "MM2Final", FileName = "Config" },
         KeySystem = false
     })
+    
+    RayfieldWindow = Window
 
-    -- ===== ESP TAB =====
-    local EspTab = Window:CreateTab("ESP", 4483362458)
+    -- ===== VISUALS TAB (ПЕРЕИМЕНОВАНО ИЗ ESP) =====
+    local VisualsTab = Window:CreateTab(T.visualsTab, 4483362458)
 
-    EspTab:CreateToggle({
-        Name = "включить",
+    VisualsTab:CreateToggle({
+        Name = T.toggle,
         CurrentValue = true,
         Flag = "EspMain",
         Callback = function(v)
@@ -132,8 +383,29 @@ function LoadMain()
         end
     })
 
-    EspTab:CreateSlider({
-        Name = "прозрачность",
+    VisualsTab:CreateToggle({
+        Name = T.teamCheck,
+        CurrentValue = false,
+        Flag = "TeamCheck",
+        Callback = function(v) settings.teamCheck = v end
+    })
+
+    VisualsTab:CreateToggle({
+        Name = T.heroEsp,
+        CurrentValue = true,
+        Flag = "HeroEsp",
+        Callback = function(v) settings.heroEsp = v end
+    })
+    
+    VisualsTab:CreateToggle({
+        Name = T.wallCheck,
+        CurrentValue = true,
+        Flag = "WallCheck",
+        Callback = function(v) settings.wallCheck = v end
+    })
+
+    VisualsTab:CreateSlider({
+        Name = T.transparency,
         Range = {0, 1},
         Increment = 0.1,
         CurrentValue = 0.5,
@@ -146,41 +418,84 @@ function LoadMain()
         end
     })
 
-    EspTab:CreateLabel("цвета")
+    VisualsTab:CreateLabel(T.colors)
 
-    EspTab:CreateColorPicker({
-        Name = "убийца",
+    VisualsTab:CreateColorPicker({
+        Name = T.murderer,
         Color = Color3.fromRGB(255, 0, 0),
         Flag = "ColorMurderer",
         Callback = function(v) settings.murdererColor = v end
     })
 
-    EspTab:CreateColorPicker({
-        Name = "шериф",
+    VisualsTab:CreateColorPicker({
+        Name = T.sheriff,
         Color = Color3.fromRGB(0, 255, 0),
         Flag = "ColorSheriff",
         Callback = function(v) settings.sheriffColor = v end
     })
 
-    EspTab:CreateColorPicker({
-        Name = "мирный",
+    VisualsTab:CreateColorPicker({
+        Name = T.innocent,
         Color = Color3.fromRGB(255, 255, 255),
         Flag = "ColorInnocent",
         Callback = function(v) settings.innocentColor = v end
     })
 
+    VisualsTab:CreateColorPicker({
+        Name = T.hero,
+        Color = Color3.fromRGB(255, 255, 0),
+        Flag = "ColorHero",
+        Callback = function(v) settings.heroColor = v end
+    })
+
+    -- 📏 DISTANCE DISPLAY
+    VisualsTab:CreateToggle({
+        Name = T.distanceDisplay,
+        CurrentValue = false,
+        Flag = "DistanceDisplay",
+        Callback = function(v)
+            settings.distanceDisplayEnabled = v
+            if not v then
+                for _, label in pairs(distanceLabels) do
+                    if label and label.label then 
+                        pcall(function() label.label:Destroy() end) 
+                    end
+                end
+                distanceLabels = {}
+            end
+        end
+    })
+
+    -- 🎭 ROLE INDICATOR
+    VisualsTab:CreateToggle({
+        Name = T.roleIndicator,
+        CurrentValue = false,
+        Flag = "RoleIndicator",
+        Callback = function(v)
+            settings.roleIndicatorEnabled = v
+            if not v then
+                for _, indicator in pairs(roleIndicators) do
+                    if indicator and indicator.indicator then 
+                        pcall(function() indicator.indicator:Destroy() end) 
+                    end
+                end
+                roleIndicators = {}
+            end
+        end
+    })
+
     -- ===== AIMBOT TAB =====
-    local AimbotTab = Window:CreateTab("AIMBOT", 4483362458)
+    local AimbotTab = Window:CreateTab(T.aimbotTab, 4483362458)
 
     AimbotTab:CreateToggle({
-        Name = "включить",
+        Name = T.toggle,
         CurrentValue = false,
         Flag = "AimbotMain",
         Callback = function(v) settings.aimbotEnabled = v end
     })
 
     AimbotTab:CreateDropdown({
-        Name = "клавиша",
+        Name = T.key,
         Options = {"ПКМ", "ЛКМ", "E", "Q", "Shift", "Ctrl", "X"},
         CurrentOption = "ПКМ",
         Flag = "AimbotKey",
@@ -200,7 +515,7 @@ function LoadMain()
     })
 
     AimbotTab:CreateSlider({
-        Name = "fov",
+        Name = T.fov,
         Range = {0, 360},
         Increment = 5,
         CurrentValue = 90,
@@ -212,7 +527,7 @@ function LoadMain()
     })
 
     AimbotTab:CreateToggle({
-        Name = "показать fov",
+        Name = T.showFov,
         CurrentValue = true,
         Flag = "FovCircle",
         Callback = function(v)
@@ -222,7 +537,7 @@ function LoadMain()
     })
 
     AimbotTab:CreateColorPicker({
-        Name = "цвет fov",
+        Name = T.fovColor,
         Color = Color3.fromRGB(255, 255, 255),
         Flag = "FovColor",
         Callback = function(v)
@@ -232,16 +547,23 @@ function LoadMain()
     })
 
     AimbotTab:CreateSlider({
-        Name = "плавность",
+        Name = T.smooth,
         Range = {0, 1},
         Increment = 0.1,
         CurrentValue = 0.5,
         Flag = "AimbotSmooth",
         Callback = function(v) settings.aimbotSmoothness = v end
     })
+    
+    AimbotTab:CreateToggle({
+        Name = T.predictive,
+        CurrentValue = false,
+        Flag = "PredictiveAim",
+        Callback = function(v) settings.predictiveAimbot = v end
+    })
 
     AimbotTab:CreateDropdown({
-        Name = "часть",
+        Name = T.targetPart,
         Options = {"Head", "Torso", "HumanoidRootPart"},
         CurrentOption = "Head",
         Flag = "AimbotPart",
@@ -249,14 +571,15 @@ function LoadMain()
     })
 
     -- ===== MOVEMENT TAB =====
-    local MoveTab = Window:CreateTab("MOVEMENT", 6031068329)
+    local MoveTab = Window:CreateTab(T.moveTab, 6031068329)
 
     MoveTab:CreateToggle({
-        Name = "speed boost",
+        Name = T.speedBoost,
         CurrentValue = false,
         Flag = "SpeedToggle",
         Callback = function(v)
             settings.speedEnabled = v
+            -- ✅ ИСПРАВЛЕНО: Проверка на nil
             if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
                 LocalPlayer.Character.Humanoid.WalkSpeed = v and settings.speedValue or 16
             end
@@ -264,7 +587,7 @@ function LoadMain()
     })
 
     MoveTab:CreateSlider({
-        Name = "скорость",
+        Name = T.speed,
         Range = {16, 200},
         Increment = 5,
         CurrentValue = 32,
@@ -278,7 +601,7 @@ function LoadMain()
     })
 
     MoveTab:CreateToggle({
-        Name = "jump power",
+        Name = T.jumpPower,
         CurrentValue = false,
         Flag = "JumpToggle",
         Callback = function(v)
@@ -290,7 +613,7 @@ function LoadMain()
     })
 
     MoveTab:CreateSlider({
-        Name = "высота прыжка",
+        Name = T.jumpHeight,
         Range = {50, 200},
         Increment = 5,
         CurrentValue = 75,
@@ -304,15 +627,162 @@ function LoadMain()
     })
 
     MoveTab:CreateToggle({
-        Name = "noclip",
+        Name = T.noclip,
         CurrentValue = false,
         Flag = "NoClip",
-        Callback = function(v) settings.noclipEnabled = v end
+        Callback = function(v)
+            settings.noclipEnabled = v
+            noclipEnabled = v
+            if v and LocalPlayer.Character then
+                for _, part in ipairs(LocalPlayer.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            elseif not v and LocalPlayer.Character then
+                for _, part in ipairs(LocalPlayer.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = true
+                    end
+                end
+            end
+        end
+    })
+
+    -- 🧗 WALL CLIMB
+    MoveTab:CreateToggle({
+        Name = T.wallClimb,
+        CurrentValue = false,
+        Flag = "WallClimbToggle",
+        Callback = function(v)
+            settings.wallClimbEnabled = v
+        end
+    })
+
+    MoveTab:CreateSlider({
+        Name = T.wallClimbSpeed,
+        Range = {10, 100},
+        Increment = 5,
+        CurrentValue = 50,
+        Flag = "WallClimbSpeed",
+        Callback = function(v)
+            settings.wallClimbSpeed = v
+        end
+    })
+
+    -- 🏃 SPRINT MODE
+    MoveTab:CreateToggle({
+        Name = T.sprintMode,
+        CurrentValue = false,
+        Flag = "SprintToggle",
+        Callback = function(v)
+            settings.sprintEnabled = v
+        end
+    })
+
+    MoveTab:CreateSlider({
+        Name = T.sprintMultiplier,
+        Range = {1, 3},
+        Increment = 0.1,
+        CurrentValue = 1.5,
+        Flag = "SprintMultiplier",
+        Callback = function(v)
+            settings.sprintMultiplier = v
+        end
+    })
+
+    -- ===== FARM TAB =====
+    local FarmTab = Window:CreateTab(T.farmTab, 6031068329)
+
+    FarmTab:CreateToggle({
+        Name = T.autoFarm,
+        CurrentValue = false,
+        Flag = "FarmToggle",
+        Callback = function(v) settings.farmEnabled = v end
+    })
+
+    FarmTab:CreateSlider({
+        Name = T.farmRadius,
+        Range = {10, 200},
+        Increment = 5,
+        CurrentValue = 50,
+        Flag = "FarmRadius",
+        Callback = function(v) settings.farmRadius = v end
+    })
+
+    FarmTab:CreateSlider({
+        Name = T.farmSpeed,
+        Range = {0.1, 3},
+        Increment = 0.1,
+        CurrentValue = 1,
+        Flag = "FarmSpeed",
+        Callback = function(v) settings.farmSpeed = v end
+    })
+
+    -- ===== SETTINGS TAB =====
+    local SettingsTab = Window:CreateTab(T.settingsTab, 4483362458)
+
+    SettingsTab:CreateDropdown({
+        Name = T.language,
+        Options = {"English", "Українська"},
+        CurrentOption = "English",
+        Flag = "Language",
+        Callback = function(opt)
+            if opt == "Українська" then
+                language = "UA"
+            else
+                language = "EN"
+            end
+            T = texts[language]
+            Rayfield:Notify({
+                Title = "Language",
+                Content = "Restart script to apply",
+                Duration = 3
+            })
+        end
+    })
+
+    -- 🎨 THEME SYSTEM
+    SettingsTab:CreateDropdown({
+        Name = T.theme,
+        Options = {"Dark", "Light", "Neon"},
+        CurrentOption = "Dark",
+        Flag = "ThemeSelect",
+        Callback = function(theme)
+            settings.currentTheme = theme
+            Rayfield:Notify({
+                Title = "Theme Changed",
+                Content = "Theme switched to " .. theme,
+                Duration = 2
+            })
+        end
+    })
+
+    -- TOGGLE MENU (Delete Key)
+    SettingsTab:CreateToggle({
+        Name = T.toggleMenu,
+        CurrentValue = true,
+        Flag = "MenuToggle",
+        Callback = function(v)
+            settings.menuVisible = v
+            if not v then
+                Rayfield:Notify({
+                    Title = "Menu Hidden",
+                    Content = "Press Delete to show menu",
+                    Duration = 2
+                })
+            end
+        end
     })
 
     -- ===== FUNCTIONS =====
     function getRole(player)
         if not player.Character then return "Innocent" end
+        
+        if player.Name:lower():find("hero") or (player.Character:FindFirstChild("HeroTag")) then
+            return "Hero"
+        end
+        
         for _, tool in ipairs(player.Character:GetChildren()) do
             if tool:IsA("Tool") then
                 if tool.Name:lower():find("knife") then return "Murderer"
@@ -323,15 +793,41 @@ function LoadMain()
     end
 
     function getGlowColor(player)
+        if not settings.heroEsp and getRole(player) == "Hero" then
+            return nil
+        end
+        
         local role = getRole(player)
         if role == "Murderer" then return settings.murdererColor
         elseif role == "Sheriff" then return settings.sheriffColor
+        elseif role == "Hero" then return settings.heroColor
         else return settings.innocentColor end
+    end
+    
+    function isPlayerVisible(player)
+        if not settings.wallCheck then return true end
+        if not player.Character or not player.Character:FindFirstChild("Head") then return false end
+        
+        local camera = Camera.CFrame.Position
+        local playerHead = player.Character.Head.Position
+        
+        local ray = Ray.new(camera, (playerHead - camera).Unit * 1000)
+        local hit, _ = workspace:FindPartOnRay(ray)
+        
+        if hit then
+            local hitPlayer = Players:FindFirstChild(hit.Parent.Name)
+            return hitPlayer == player
+        end
+        
+        return true
     end
 
     function createHighlight(player)
         if player == LocalPlayer then return end
         if not player.Character then return end
+        
+        local color = getGlowColor(player)
+        if not color then return end
         
         if highlights[player] then
             pcall(function() highlights[player]:Destroy() end)
@@ -339,7 +835,7 @@ function LoadMain()
         
         local highlight = Instance.new("Highlight")
         highlight.Adornee = player.Character
-        highlight.FillColor = getGlowColor(player)
+        highlight.FillColor = color
         highlight.FillTransparency = settings.glowTransparency
         highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
         highlight.Enabled = settings.espEnabled
@@ -348,13 +844,21 @@ function LoadMain()
         highlights[player] = highlight
     end
 
-    function getClosestTarget()
+    function getAimbotTarget()
         local closest = nil
         local shortestDist = settings.aimbotFov
         local mousePos = UserInputService:GetMouseLocation()
         
         for _, player in ipairs(Players:GetPlayers()) do
             if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild(settings.aimbotTargetPart) then
+                if settings.teamCheck and player.Team == LocalPlayer.Team then
+                    continue
+                end
+                
+                if not isPlayerVisible(player) then
+                    continue
+                end
+                
                 local part = player.Character[settings.aimbotTargetPart]
                 local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
                 
@@ -371,7 +875,11 @@ function LoadMain()
         return closest
     end
 
-    -- ===== ESP SETUP =====
+    function getClosestTarget()
+        return getAimbotTarget()
+    end
+
+    -- ===== VISUALS SETUP =====
     for _, player in ipairs(Players:GetPlayers()) do
         if player ~= LocalPlayer then
             task.spawn(function()
@@ -398,22 +906,235 @@ function LoadMain()
             pcall(function() highlights[player]:Destroy() end)
             highlights[player] = nil
         end
+        -- ✅ ИСПРАВЛЕНО: Проверка структуры перед удалением
+        if distanceLabels[player] and distanceLabels[player].label then
+            pcall(function() distanceLabels[player].label:Destroy() end)
+            distanceLabels[player] = nil
+        end
+        if roleIndicators[player] and roleIndicators[player].indicator then
+            pcall(function() roleIndicators[player].indicator:Destroy() end)
+            roleIndicators[player] = nil
+        end
     end)
 
-    -- Update colors
+    -- ===== UPDATE COLORS =====
     task.spawn(function()
         while task.wait(1) do
             for player, highlight in pairs(highlights) do
                 if player and player.Character and highlight then
                     pcall(function()
-                        highlight.FillColor = getGlowColor(player)
+                        if not isPlayerVisible(player) and settings.wallCheck then
+                            highlight.Enabled = false
+                        else
+                            highlight.Enabled = settings.espEnabled
+                            local color = getGlowColor(player)
+                            if color then
+                                highlight.FillColor = color
+                            end
+                        end
                     end)
                 end
             end
         end
     end)
 
-    -- ===== MAIN LOOP =====
+    -- ===== DISTANCE DISPLAY LOGIC 📏 =====
+    task.spawn(function()
+        while task.wait(0.5) do
+            if not settings.distanceDisplayEnabled then continue end
+            
+            for _, player in ipairs(Players:GetPlayers()) do
+                -- ✅ ИСПРАВЛЕНО: Проверка всех условий перед обращением
+                if player ~= LocalPlayer and player.Character and 
+                   player.Character:FindFirstChild("Head") and 
+                   LocalPlayer.Character and 
+                   LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                   
+                    local dist = (player.Character.Head.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+                    
+                    if not distanceLabels[player] then
+                        local label = Instance.new("BillboardGui")
+                        label.Size = UDim2.new(4, 0, 2, 0)
+                        label.MaxDistance = 200
+                        label.Parent = player.Character.Head
+                        
+                        local textLabel = Instance.new("TextLabel")
+                        textLabel.Size = UDim2.new(1, 0, 1, 0)
+                        textLabel.BackgroundTransparency = 1
+                        textLabel.TextScaled = true
+                        textLabel.Font = Enum.Font.GothamBold
+                        textLabel.Parent = label
+                        
+                        distanceLabels[player] = {label = label, text = textLabel}
+                    end
+                    
+                    if distanceLabels[player] then
+                        distanceLabels[player].text.Text = math.floor(dist) .. "m"
+                        distanceLabels[player].text.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    end
+                end
+            end
+        end
+    end)
+
+    -- ===== ROLE INDICATOR LOGIC 🎭 =====
+    task.spawn(function()
+        while task.wait(0.5) do
+            if not settings.roleIndicatorEnabled then continue end
+            
+            for _, player in ipairs(Players:GetPlayers()) do
+                -- ✅ ИСПРАВЛЕНО: Проверка структуры
+                if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
+                    if not roleIndicators[player] then
+                        local indicator = Instance.new("BillboardGui")
+                        indicator.Size = UDim2.new(4, 0, 1.5, 0)
+                        indicator.MaxDistance = 150
+                        indicator.Parent = player.Character.Head
+                        indicator.StudsOffset = Vector3.new(0, 3, 0)
+                        
+                        local textLabel = Instance.new("TextLabel")
+                        textLabel.Size = UDim2.new(1, 0, 1, 0)
+                        textLabel.BackgroundTransparency = 0.3
+                        textLabel.TextScaled = true
+                        textLabel.Font = Enum.Font.GothamBold
+                        textLabel.Parent = indicator
+                        
+                        roleIndicators[player] = {indicator = indicator, text = textLabel}
+                    end
+                    
+                    if roleIndicators[player] then
+                        local role = getRole(player)
+                        roleIndicators[player].text.Text = role:upper()
+                        
+                        if role == "Murderer" then
+                            roleIndicators[player].text.TextColor3 = Color3.fromRGB(255, 0, 0)
+                            roleIndicators[player].text.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+                        elseif role == "Sheriff" then
+                            roleIndicators[player].text.TextColor3 = Color3.fromRGB(0, 255, 0)
+                            roleIndicators[player].text.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+                        elseif role == "Hero" then
+                            roleIndicators[player].text.TextColor3 = Color3.fromRGB(255, 255, 0)
+                            roleIndicators[player].text.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
+                        else
+                            roleIndicators[player].text.TextColor3 = Color3.fromRGB(255, 255, 255)
+                            roleIndicators[player].text.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                        end
+                    end
+                end
+            end
+        end
+    end)
+
+    -- ===== AUTO FARM =====
+    task.spawn(function()
+        while task.wait(settings.farmSpeed) do
+            if settings.farmEnabled and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                local root = LocalPlayer.Character.HumanoidRootPart
+                local coins = {}
+                
+                for _, v in ipairs(workspace:GetDescendants()) do
+                    if v:IsA("Part") and v.Name:lower():find("coin") then
+                        local dist = (v.Position - root.Position).Magnitude
+                        if dist < settings.farmRadius then
+                            table.insert(coins, v)
+                        end
+                    end
+                end
+                
+                if #coins > 0 then
+                    local closest = coins[1]
+                    local closestDist = (closest.Position - root.Position).Magnitude
+                    
+                    for _, coin in ipairs(coins) do
+                        local dist = (coin.Position - root.Position).Magnitude
+                        if dist < closestDist then
+                            closest = coin
+                            closestDist = dist
+                        end
+                    end
+                    
+                    root.CFrame = closest.CFrame * CFrame.new(0, 2, 0)
+                    task.wait(0.1)
+                    
+                    VirtualUser:ClickButton1(Vector2.new(), closest.CFrame)
+                end
+            end
+        end
+    end)
+
+    -- ===== WALL CLIMB LOGIC 🧗 =====
+    RunService.RenderStepped:Connect(function()
+        if settings.wallClimbEnabled and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local root = LocalPlayer.Character.HumanoidRootPart
+            local humanoid = LocalPlayer.Character:FindFirstChild("Humanoid")
+            
+            local rayCast = Ray.new(root.Position, root.CFrame.LookVector * 5)
+            local hit = workspace:FindPartOnRay(rayCast)
+            
+            if hit and not hit:IsDescendantOf(LocalPlayer.Character) then
+                if humanoid then
+                    humanoid.Velocity = humanoid.Velocity + Vector3.new(0, settings.wallClimbSpeed / 100, 0)
+                end
+            end
+        end
+    end)
+
+    -- ===== SPRINT MODE LOGIC 🏃 =====
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        if settings.sprintEnabled and input.KeyCode == Enum.KeyCode.LeftShift then
+            -- ✅ ИСПРАВЛЕНО: Проверка условий спринта
+            if sprintCooldown <= 0 and not sprintActive and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                sprintActive = true
+                local originalSpeed = LocalPlayer.Character.Humanoid.WalkSpeed
+                LocalPlayer.Character.Humanoid.WalkSpeed = originalSpeed * settings.sprintMultiplier
+                
+                task.wait(3)
+                
+                if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                    LocalPlayer.Character.Humanoid.WalkSpeed = originalSpeed
+                end
+                
+                sprintActive = false
+                sprintCooldown = 5
+            end
+        end
+    end)
+
+    -- Sprint Cooldown
+    task.spawn(function()
+        while task.wait(0.1) do
+            if sprintCooldown > 0 then
+                sprintCooldown = sprintCooldown - 0.1
+            end
+        end
+    end)
+
+    -- ===== MENU TOGGLE (Delete Key) =====
+    local menuOpen = true
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        if input.KeyCode == Enum.KeyCode.Delete then
+            menuOpen = not menuOpen
+            settings.menuVisible = menuOpen
+            
+            if menuOpen then
+                Rayfield:Notify({
+                    Title = "Menu",
+                    Content = "Menu opened",
+                    Duration = 1
+                })
+            else
+                Rayfield:Notify({
+                    Title = "Menu",
+                    Content = "Menu hidden (Press Delete to show)",
+                    Duration = 1
+                })
+            end
+        end
+    end)
+
+    -- ===== MAIN LOOP (ОПТИМИЗИРОВАННЫЙ) =====
     RunService.RenderStepped:Connect(function()
         -- FOV circle
         fovCircle.Position = UserInputService:GetMouseLocation()
@@ -434,19 +1155,24 @@ function LoadMain()
                 local target = getClosestTarget()
                 if target and target.Character and target.Character:FindFirstChild(settings.aimbotTargetPart) then
                     local part = target.Character[settings.aimbotTargetPart]
+                    
+                    local randomOffset = 0
+                    if settings.predictiveAimbot then
+                        randomOffset = math.random(-5, 5) / 100
+                    end
+                    
                     Camera.CFrame = Camera.CFrame:Lerp(
-                        CFrame.new(Camera.CFrame.Position, part.Position),
+                        CFrame.new(Camera.CFrame.Position, part.Position + Vector3.new(randomOffset, randomOffset, 0)),
                         settings.aimbotSmoothness
                     )
                 end
             end
         end
         
-        -- NoClip
         if settings.noclipEnabled and LocalPlayer.Character then
-            for _, v in pairs(LocalPlayer.Character:GetDescendants()) do
-                if v:IsA("BasePart") then
-                    v.CanCollide = false
+            for _, part in ipairs(noclipParts) do
+                if part and part.Parent and part:IsA("BasePart") then
+                    part.CanCollide = false
                 end
             end
         end
@@ -454,7 +1180,33 @@ function LoadMain()
 
     Rayfield:Notify({
         Title = "1337",
-        Content = "скрипт загружен",
+        Content = T.loaded .. " v2.6 [FIXED]",
         Duration = 2
     })
 end
+
+-- ===== MODERN KEY CHECK =====
+keyButton.MouseButton1Click:Connect(function()
+    if keyBox.Text == "2026-3" then
+        keyGuiInstance:Destroy()
+        LoadMain()
+    else
+        keyBox.Text = ""
+        keyBox.PlaceholderText = "Invalid key ❌"
+        keyBox.PlaceholderColor3 = Color3.fromRGB(255, 100, 100)
+    end
+end)
+
+-- Enter key support
+keyBox.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        if keyBox.Text == "2026-3" then
+            keyGuiInstance:Destroy()
+            LoadMain()
+        else
+            keyBox.Text = ""
+            keyBox.PlaceholderText = "Invalid key ❌"
+            keyBox.PlaceholderColor3 = Color3.fromRGB(255, 100, 100)
+        end
+    end
+end)
