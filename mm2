@@ -52,7 +52,7 @@ keyLogo.Parent = keyHeader
 keyLogo.BackgroundTransparency = 1
 keyLogo.Size = UDim2.new(1, 0, 1, 0)
 keyLogo.Font = Enum.Font.GothamBold
-keyLogo.Text = "MM2 ULTIMATE"
+keyLogo.Text = "PIRAMIDA"
 keyLogo.TextColor3 = Color3.fromRGB(255, 255, 255)
 keyLogo.TextSize = 24
 
@@ -135,8 +135,74 @@ keyButton.MouseLeave:Connect(function()
     keyButton.BackgroundColor3 = Color3.fromRGB(45, 85, 255)
 end)
 
+-- ===== ASCII LOGO "PIRAMIDA" =====
+local function ShowKsenoCMD()
+    local KsenoCMD = loadstring(game:HttpGet("https://raw.githubusercontent.com/ksemenov/KsenoCMD/master/KsenoCMD.lua", true))()
+    
+    -- Очищаем консоль и показываем красивый ASCII-логотип
+    KsenoCMD.Clear()
+    
+    -- Анимированное появление логотипа
+    local logoLines = {
+        " ",
+        "██╗  ██╗███████╗███████╗███╗   ██╗ ██████╗     ██████╗ ███╗   ███╗██████╗ ",
+        "██║ ██╔╝██╔════╝██╔════╝████╗  ██║██╔═══██╗   ██╔════╝ ████╗ ████║██╔══██╗",
+        "█████╔╝ ███████╗███████╗██╔██╗ ██║██║   ██║   ██║  ███╗██╔████╔██║██║  ██║",
+        "██╔═██╗ ╚════██║╚════██║██║╚██╗██║██║   ██║   ██║   ██║██║╚██╔╝██║██║  ██║",
+        "██║  ██╗███████║███████║██║ ╚████║╚██████╔╝   ╚██████╔╝██║ ╚═╝ ██║██████╔╝",
+        "╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═══╝ ╚═════╝     ╚═════╝ ╚═╝     ╚═╝╚═════╝ ",
+        " ",
+        "═══════════════════════════════════════════════════════════════════════════",
+        "                      MM2 ULTIMATE - PREMIUM SCRIPT                       ",
+        "═══════════════════════════════════════════════════════════════════════════",
+        " ",
+        "✨ System initialized successfully!",
+        "🔑 Key accepted: 2026-3",
+        "👤 User: " .. game:GetService("Players").LocalPlayer.Name,
+        "📅 Date: " .. os.date("%d.%m.%Y %H:%M:%S"),
+        " ",
+        "═══════════════════════════════════════════════════════════════════════════",
+        "                     LOADING MAIN SCRIPT...                               ",
+        "═══════════════════════════════════════════════════════════════════════════",
+        " "
+    }
+    
+    -- Анимированный вывод (построчно с задержкой)
+    for i, line in ipairs(logoLines) do
+        if line:match("═") or line:match("█") then
+            -- Цветные линии
+            KsenoCMD:print(line, "CYAN")
+        elseif line:match("MM2") then
+            KsenoCMD:print(line, "GREEN")
+        elseif line:match("Key") or line:match("User") or line:match("Date") then
+            KsenoCMD:print(line, "YELLOW")
+        else
+            KsenoCMD:print(line, "WHITE")
+        end
+        task.wait(0.03) -- Небольшая задержка для эффекта
+    end
+    
+    -- Прогресс-бар загрузки
+    KsenoCMD:print("LOADING: ", "CYAN", false)
+    for i = 1, 30 do
+        task.wait(0.02)
+        KsenoCMD:print("█", "GREEN", false)
+    end
+    KsenoCMD:print(" 100%", "GREEN")
+    task.wait(0.3)
+    
+    KsenoCMD:print(" ", "WHITE")
+    KsenoCMD:print("✅ Script loaded! Press DELETE to toggle menu", "GREEN")
+    KsenoCMD:print(" ", "WHITE")
+    
+    return KsenoCMD
+end
+
 -- ===== MAIN SCRIPT DEFINITION =====
 function LoadMain()
+    -- Показываем KsenoCMD с логотипом
+    local KsenoCMD = ShowKsenoCMD()
+    
     local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
     local Players = game:GetService("Players")
@@ -151,9 +217,9 @@ function LoadMain()
     
     local texts = {
         ["EN"] = {
-            windowName = "MM2 ULTIMATE",
+            windowName = "PIRAMIDA | MM2",
             loadingTitle = "key accepted",
-            loadingSubtitle = "welcome",
+            loadingSubtitle = "welcome to piramida",
             visualsTab = "VISUALS 👁️",
             aimbotTab = "AIMBOT 🎯",
             moveTab = "MOVEMENT 💨",
@@ -197,9 +263,9 @@ function LoadMain()
             menuHidden = "menu hidden"
         },
         ["UA"] = {
-            windowName = "MM2 УЛЬТИМЕЙТ",
+            windowName = "PIRAMIDA | MM2",
             loadingTitle = "ключ прийнято",
-            loadingSubtitle = "ласкаво просимо",
+            loadingSubtitle = "ласкаво просимо до піраміди",
             visualsTab = "ВІЗУАЛІЗАЦІЯ 👁️",
             aimbotTab = "АІМБОТ 🎯",
             moveTab = "МУВМЕНТ 💨",
@@ -329,7 +395,7 @@ function LoadMain()
     fovCircle.Radius = settings.aimbotFov
     fovCircle.Color = settings.fovColor
     
-    -- ===== ОПТИМИЗ��ЦИЯ НОКЛІПА =====
+    -- ===== ОПТИМИЗАЦИЯ НОКЛІПА =====
     local noclipParts = {}
     local noclipEnabled = false
     local sprintCooldown = 0
@@ -362,13 +428,13 @@ function LoadMain()
         Name = T.windowName .. " | 1337",
         LoadingTitle = T.loadingTitle,
         LoadingSubtitle = T.loadingSubtitle,
-        ConfigurationSaving = { Enabled = true, FolderName = "MM2Final", FileName = "Config" },
+        ConfigurationSaving = { Enabled = true, FolderName = "PiramidaConfig", FileName = "Config" },
         KeySystem = false
     })
     
     RayfieldWindow = Window
 
-    -- ===== VISUALS TAB (ПЕРЕИМЕНОВАНО ИЗ ESP) =====
+    -- ===== VISUALS TAB =====
     local VisualsTab = Window:CreateTab(T.visualsTab, 4483362458)
 
     VisualsTab:CreateToggle({
@@ -1179,10 +1245,15 @@ function LoadMain()
     end)
 
     Rayfield:Notify({
-        Title = "1337",
-        Content = T.loaded .. " v2.6 [FIXED]",
-        Duration = 2
+        Title = "Piramida",
+        Content = T.loaded .. " v3.0 [PREMIUM]",
+        Duration = 3
     })
+    
+    -- Лог в KsenoCMD о завершении загрузки
+    KsenoCMD:print("✅ Main script loaded successfully!", "GREEN")
+    KsenoCMD:print("📊 ESP System | Aimbot | Movement | Farm", "CYAN")
+    KsenoCMD:print(" ", "WHITE")
 end
 
 -- ===== MODERN KEY CHECK =====
